@@ -1,0 +1,86 @@
+body {
+	background-color: yellow;
+
+}
+
+h1 {
+	text-align: center;
+
+}
+
+#left-column {
+	width: 60%;
+	float: left;
+
+
+}
+
+#right-column {
+	width: 35%;
+	float: left;
+
+
+}
+
+.grid {
+	width: 80%;
+	height: 600px;
+	margin-left: auto;
+	margin-right: auto;
+	border: solid black 1px;
+	background-color: white;
+
+}
+
+.row {
+	width: 100%;
+	line-height: 200px;
+	float: left;
+	border: solid green 1px;
+	clear: both;
+
+}
+
+.square {
+	width: 33%;
+	height: 200px;
+	float: left;
+	border: solid red 1px;
+	color: red;
+	font-size: 100px;
+	text-align: center;
+
+}
+
+#win {
+	width: 90%;
+	text-align: center;
+}
+
+.winner-board {
+	width: 90%;
+	height: 200px;
+	margin-left: 0;
+	border: solid black 1px;
+	background-color: white;
+
+
+}
+
+.name {
+	width: 30%;
+	height: 30px;
+
+}
+
+.start-new {
+	width: 60%;
+	height: 30px;
+
+}
+
+.timer {
+	display: inline;
+
+}
+

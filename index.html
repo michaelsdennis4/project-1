@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Tic-Tac-Toe</title>
+	<link rel="stylesheet" href="style.css">
+	<script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+	<header>
+		<h1>Let's Play TIC TAC TOE!</h1>
+	</header>
+
+	<div id='left-column'>
+
+		<div class='grid'>
+			<div class='row'>
+				<div class='square' id='top-left'></div>
+				<div class='square' id='top-middle'></div>
+				<div class='square' id='top-right'></div>
+			</div>
+			<div class='row'>
+				<div class='square' id='middle-left'></div>
+				<div class='square' id='center'></div>
+				<div class='square' id='middle-right'></div>
+			</div>
+			<div class='row'>
+				<div class='square' id='bottom-left'></div>
+				<div class='square' id='bottom-middle'></div>
+				<div class='square' id='bottom-right'></div>
+			</div>
+		</div>
+		<!-- end grid -->
+		
+	</div> 
+	<!-- end left column -->
+
+	<div id='right-column'>
+		<h2>Player X:</h2><input type='text' class='name' id='name-X'>
+		<h3 class='timer' id='timer-X'>Timer: 10 seconds left</h3>
+
+		<h2>Player O:</h2><input type='text' class='name' id='name-O'>
+		<h3 class='timer' id='timer-O'>Timer: 10 seconds left</h3>
+
+		
+
+		<h3 id='win'>Winner Board</h3>
+		<ul class='winner-board'>
+
+
+		</ul>
+		<button class='start-new'>Start New Game</button>
+
+
+
+
+	</div>
+	<!-- end right column -->
+
+</body>
+</html>
