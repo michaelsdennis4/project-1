@@ -1,5 +1,6 @@
 body {
 	background-color: yellow;
+	font-family: 'Rubik Mono One', sans-serif;
 
 }
 
@@ -18,7 +19,6 @@ h1 {
 #right-column {
 	width: 35%;
 	float: left;
-
 
 }
 
@@ -71,17 +71,38 @@ h1 {
 .name {
 	width: 30%;
 	height: 30px;
+	font-size: 18px;
+	display: inline;
+}
 
+#name-X {
+	color: black;
+}
+
+#name-O {
+	color: red;
 }
 
 .start-new {
 	width: 60%;
 	height: 30px;
+	font-style: bold;
+	font-size: 18px;
+	color: white;
+	background-color: green;
 
 }
 
 .timer {
 	display: inline;
 
+}
+
+#timer-X {
+	color: black;
+}
+
+#timer-O {
+	color: red;
 }
 

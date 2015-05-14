@@ -9,6 +9,10 @@ var turn = 'X';
 var winner = '';
 var playerX = '';
 var playerO = '';
+var intervalID;
+var timer;
+var timerX = document.querySelector('#timer-X');
+var timerO = document.querySelector('#timer-O');
 
 
 //OBJECTS =============================================================================
@@ -209,55 +213,96 @@ Grid.prototype.getWinner = function() {
 
 //FUNCTIONS ======================================================================
 
+var takeTurn = function() {
+	timer = 10;
+	intervalID = window.setInterval(decreaseTimer, 1000);
+	//waiting for player to take turn
+
+	//switch player
+	if (turn === 'X') { turn = 'O' } else { turn = 'X' };
+};
+
 var newGame = function() {
 	//get player names
-	/*
-	playerX = document.querySelector('#name-X').value;
-	if (playerX.length === 0) {
-		window.alert('Please enter a name for Player X');
-		return false;
-	};
-	playerO = document.querySelector('#name-O').value;
-	if (playerO.length === 0) {
-		window.alert('Please enter a name for Player O');
-		return false;
-	};
-	*/
+	playerX = document.querySelector('input#name-X').value;
+	console.log(playerX);
+	playerO = document.querySelector('input#name-O').value;
+	console.log(playerO);
+	turn = first;
 	if (first === 'X') { first = 'O' } else { first = 'X' }; //alternate first turn between X and O (X always starts first game)
-  turn = first;
 	winner = '';
-
+	timerX.textContent = '';
+	timerO.textContent = '';
 	grid = new Grid();
 	grid.draw();
+	takeTurn();
+};
+
+var decreaseTimer = function () {
+	if (turn === 'X') {
+		timerX.textContent = "Your Turn: "+timer+" seconds left...";
+	} else if (turn === 'O') {
+		timerO.textContent = "Your Turn: "+timer+" seconds left...";
+	};
+	timer--;
+	if (timer < 0) { 
+		//game over, stop timer
+		window.clearInterval(intervalID);
+		if (turn === 'X') {
+			winner = 'O';
+			if (playerO != '') { winner = playerO };
+		} else if (turn === 'O') {
+			winner = 'X';
+			if (playerX != '') { winner = playerX };
+		};
+		window.alert("You are out of time!\r\n"+winner+ " has won the game!");
+		timerX.textContent = '';
+		timerO.textContent = '';
+	};
+};
+
+var processTurn = function(e) {
+	if (!grid) { return false } //no active game
+	if (winner.length > 0) { return false } //game already won
+	var pos = e.target.id; //id for square clicked on
+	if (grid.setValue(pos, turn)) {
+		//stop timer
+		window.clearInterval(intervalID);
+		timerX.textContent = '';
+		timerO.textContent = '';
+		//update grid
+		grid.draw();
+		winner = grid.getWinner();
+		if (winner === 'X') { 
+			if (playerX != '') { winner = playerX };
+			window.alert(winner+ " has won the game!");
+			// timerX.textContent = winner+ " has won the game!";
+			return;
+		};
+		if (winner ===  'O') {
+			if (playerY != '') { winner = playerY };
+			window.alert(winner+ " has won the game!");
+			// timerO.textContent = winner+ " has won the game!";
+		};
+		if (winner ===  'draw') {
+			window.alert("Draw!");
+			return;
+		};
+		takeTurn();
+	}
 };
 
 
 //EVENT LISTENERS=================================================================
 
-document.querySelector('.grid').addEventListener('click', function(e) {
-	if (!grid) { return false } //no active game
-	if (winner.length > 0) { return false } //game already wwon
-	var pos = e.target.id; //id for square clicked on
-	if (grid.setValue(pos, turn)) {
-		grid.draw();
-		winner = grid.getWinner();
-		if (winner.length === 1) { 
-			window.alert(winner+ " has won the game!");
-			return;
-		} else if (winner ===  'draw') {
-			window.alert("Draw!");
-			return;
-		}
-		if (turn === 'X') { turn = 'O' } else { turn = 'X' };
-	};
-});
+document.querySelector('.grid').addEventListener('click', processTurn);
 
 document.querySelector('.start-new').addEventListener('click', newGame);
 
 
 //INITIALIZATION ===================================================================
 
-// var game = newGame();
+
 
 
 
