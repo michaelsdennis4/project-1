@@ -1,15 +1,35 @@
 console.log('script.js linked');
 
-//SQUARE OBJECT =======================================================================
+//GLOBAL VARIABLES ===================================================================
 
-var Square = function Square() {
+var grid; 
+
+var first = '';
+var turn = 'X';
+var winner = '';
+var playerX = '';
+var playerO = '';
+
+
+//OBJECTS =============================================================================
+
+//Square OBJECT =======================================================================
+
+var Square = function Square(id) {
+	this._id = id;
 	this._value = '';
+	this.setBackgroundColor('white');
 };
 
 //methods
 Square.prototype.setValue = function(val) {
 	if (this._value.length > 0) { return false } //square already set
 	this._value = val;
+	//set color depending on value
+	switch (val) {
+		case 'X': this.setColor('black'); break;
+		case 'O': this.setColor('red'); break;
+	};
 	return true; 
 };
 
@@ -17,7 +37,18 @@ Square.prototype.getValue = function() {
 	return this._value;
 };
 
-//ROW OBJECT ==========================================================================
+Square.prototype.setBackgroundColor = function(color) {
+	//set color of corresponding screen square
+	document.querySelector('#'+this._id).style.background = color;
+};
+
+Square.prototype.setColor = function(color) {
+	//set color of text
+	document.querySelector('#'+this._id).style.color = color;
+}
+
+
+//Row OBJECT ==========================================================================
 
 var Row = function Row(sq1, sq2, sq3) {
 	this._squares = [sq1, sq2, sq3]; //array of pointers to square objects
@@ -34,8 +65,8 @@ Row.prototype.getStatus = function() {
 	var o = 0;
 	for (var i=0; i < this._squares.length; i++) {
 		switch (this._squares[i]._value) {
-			case 'x': x++; break;
-			case 'o': o++; break;
+			case 'X': x++; break;
+			case 'O': o++; break;
 		}
 	};
 	if ((x > 0) && (o > 0)) { return 'mix' }; //mix, no winner possible on this row
@@ -52,29 +83,52 @@ Row.prototype.getStatus = function() {
 	return 'empty'; //row empty
 };
 
-//GRID OBJECT =========================================================================
+Row.prototype.setBackgroundColor = function(color) {
+	this._squares.map( function(sq) {
+		sq.setBackgroundColor(color);
+	});
+};
+
+Row.prototype.setColor = function(color) {
+	this._squares.map( function(sq) {
+		sq.setColor(color);
+	});
+};
+
+//Grid OBJECT =========================================================================
 
 //each grid contains 9 square objects and 8 row objects
 
 var Grid = function Grid() {
 	this._rows = [];
-	//initialize game
+	this._squares = [];
 
 	//create squares
 	//first row
-	this._sqTopLeft = new Square();
-	this._sqTopMiddle = new Square();
-	this._sqTopRight = new Square();
+	this._sqTopLeft = new Square('top-left');
+	this._sqTopMiddle = new Square('top-middle');
+	this._sqTopRight = new Square('top-right');
 	//second row
-	this._sqMiddleLeft = new Square();
-	this._sqCenter = new Square();
-	this._sqMiddleRight = new Square();
+	this._sqMiddleLeft = new Square('middle-left');
+	this._sqCenter = new Square('center');
+	this._sqMiddleRight = new Square('middle-right');
 	//third row
-	this._sqBottomLeft = new Square();
-	this._sqBottomMiddle = new Square();
-	this._sqBottomRight = new Square();
+	this._sqBottomLeft = new Square('bottom-left');
+	this._sqBottomMiddle = new Square('bottom-middle');
+	this._sqBottomRight = new Square('bottom-right');
 
-	//create rows
+	//push squares to array
+	this._squares.push(this._sqTopLeft);
+	this._squares.push(this._sqTopMiddle);
+	this._squares.push(this._sqTopRight);
+	this._squares.push(this._sqMiddleLeft);
+	this._squares.push(this._sqCenter);
+	this._squares.push(this._sqMiddleRight);
+	this._squares.push(this._sqBottomLeft);
+	this._squares.push(this._sqBottomMiddle);
+	this._squares.push(this._sqBottomRight);
+
+	//create rows and add square objects
 	this._topAcross = new Row(this._sqTopLeft, this._sqTopMiddle, this._sqTopRight);
 	this._middleAcross = new Row(this._sqMiddleLeft, this._sqCenter, this._sqMiddleRight);
 	this._bottomAcross = new Row(this._sqBottomLeft, this._sqBottomMiddle, this._sqBottomRight);
@@ -84,6 +138,7 @@ var Grid = function Grid() {
 	this._diagonal1 = new Row(this._sqTopLeft, this._sqCenter, this._sqBottomRight);
 	this._diagonal2 = new Row(this._sqBottomLeft, this._sqCenter, this._sqTopRight);
 
+	//push rows to array
 	this._rows.push(this._topAcross);
 	this._rows.push(this._middleAcross);
 	this._rows.push(this._bottomAcross);
@@ -92,7 +147,6 @@ var Grid = function Grid() {
 	this._rows.push(this._rightDown);
 	this._rows.push(this._diagonal1);
 	this._rows.push(this._diagonal2);
-
 };
 
 Grid.prototype.setValue = function(pos, value) {
@@ -121,7 +175,92 @@ Grid.prototype.draw = function() {
 	document.querySelector('#bottom-right').textContent = this._sqBottomRight.getValue();
 };
 
-var grid = new Grid();
+Grid.prototype.getWinner = function() {
+	//check for winner by row
+	for (var i=0; i < this._rows.length; i++) {
+		switch (this._rows[i].getStatus()) {
+			case 'xxx': //x is winner
+				this._rows[i].setColor('white');
+				this._rows[i].setBackgroundColor('green');
+				return 'X'; 
+
+			case 'ooo': 
+				this._rows[i].setColor('white');
+				this._rows[i].setBackgroundColor('green');
+				return 'O'; //o is winner
+		};
+	};
+	//if no winner and all squares are filled, then draw
+	var blank = 0;
+	for (var i=0; i < this._squares.length; i++) {
+		if (this._squares[i].getValue() === '') { blank++ }
+	};
+	if (blank === 0) { 
+		this._squares.map(function(sq) {
+			sq.setColor('white');
+			sq.setBackgroundColor('red');
+		});
+		return 'draw';
+	};
+	return false; //no winner yet
+}
+
+
+
+//FUNCTIONS ======================================================================
+
+var newGame = function() {
+	//get player names
+	/*
+	playerX = document.querySelector('#name-X').value;
+	if (playerX.length === 0) {
+		window.alert('Please enter a name for Player X');
+		return false;
+	};
+	playerO = document.querySelector('#name-O').value;
+	if (playerO.length === 0) {
+		window.alert('Please enter a name for Player O');
+		return false;
+	};
+	*/
+	if (first === 'X') { first = 'O' } else { first = 'X' }; //alternate first turn between X and O (X always starts first game)
+  turn = first;
+	winner = '';
+
+	grid = new Grid();
+	grid.draw();
+};
+
+
+//EVENT LISTENERS=================================================================
+
+document.querySelector('.grid').addEventListener('click', function(e) {
+	if (!grid) { return false } //no active game
+	if (winner.length > 0) { return false } //game already wwon
+	var pos = e.target.id; //id for square clicked on
+	if (grid.setValue(pos, turn)) {
+		grid.draw();
+		winner = grid.getWinner();
+		if (winner.length === 1) { 
+			window.alert(winner+ " has won the game!");
+			return;
+		} else if (winner ===  'draw') {
+			window.alert("Draw!");
+			return;
+		}
+		if (turn === 'X') { turn = 'O' } else { turn = 'X' };
+	};
+});
+
+document.querySelector('.start-new').addEventListener('click', newGame);
+
+
+//INITIALIZATION ===================================================================
+
+// var game = newGame();
+
+
+
 
 
 
