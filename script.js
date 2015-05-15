@@ -380,7 +380,7 @@ var updateLeaderBoard = function(winner) {
 		for (j=0; j < leaderBoard.length; j++) {
 			if (leaderBoard[j].rank === (i+1)) {
 				// console.log(leaderBoard[j]);
-				leaders[i].textContent = "Player: "+leaderBoard[j].name.toUpperCase()+" Games Won: "+leaderBoard[j].wins;
+				leaders[i].textContent = "Player: "+leaderBoard[j].name.toUpperCase()+" --- Games Won: "+leaderBoard[j].wins;
 			};
 		};
 	};
