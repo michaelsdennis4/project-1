@@ -235,8 +235,8 @@ var takeTurn = function() {
 
 var newGame = function() {
 	//get player names
-	playerX = inputX.value;
-	playerO = inputO.value;
+	playerX = inputX.value.trim();
+	playerO = inputO.value.trim();
 	inputX.readOnly = true;
 	inputO.readOnly = true;
 	turn = first;
@@ -251,9 +251,17 @@ var newGame = function() {
 
 var decreaseTimer = function () {
 	if (turn === 'X') {
-		messageX.textContent = "X's Turn: "+timer+" seconds left...";
+		if (playerX !== '') {
+			messageX.textContent = playerX+"'s Turn: "+timer+" seconds left...";
+		} else {
+			messageX.textContent = "Player X's Turn: "+timer+" seconds left...";
+		};		
 	} else if (turn === 'O') {
-		messageO.textContent = "O's Turn: "+timer+" seconds left...";
+		if (playerO !== '') {
+			messageO.textContent = playerO+"'s Turn: "+timer+" seconds left...";
+		} else {
+			messageO.textContent = "Player O's Turn: "+timer+" seconds left...";
+		};
 	};
 	timer--;
 	if (timer < 0) { 
@@ -262,22 +270,24 @@ var decreaseTimer = function () {
 		if (turn === 'X') {
 			winner = 'O';
 			messageX.textContent = "You are out of time!";
-			if (playerO != '') {
+			if (playerO !== '') {
 			  messageO.textContent = playerO+ " has won the game!";
-			  // updateLeaderBoard(playerO);
+			  updateLeaderBoard(playerO);
 			} else {
 				messageO.textContent = "Player "+winner+ " has won the game!";
 			};
 		} else if (turn === 'O') {
-			if (playerO != '') {
-				winner = 'X';
-				messageO.textContent = "You are out of time!";
+			winner = 'X';
+			messageO.textContent = "You are out of time!";
+			if (playerX !== '') {
 			  messageX.textContent = playerX+ " has won the game!";
-			  // updateLeaderBoard(playerX);
+			  updateLeaderBoard(playerX);
 			} else {
 				messageX.textContent = "Player "+winner+ " has won the game!";
 			};
-		};	
+		};
+		inputX.readOnly = false;
+		inputO.readOnly = false;	
 	};
 };
 
@@ -294,7 +304,7 @@ var processTurn = function(e) {
 		grid.draw();
 		winner = grid.getWinner();
 		if (winner === 'X') { 
-			if (playerX != '') { 
+			if (playerX !== '') { 
 				messageX.textContent = playerX+ " has won the game!";
 				updateLeaderBoard(playerX);
 			} else {
@@ -305,7 +315,7 @@ var processTurn = function(e) {
 			return;
 		};
 		if (winner ===  'O') {
-			if (playerO != '') { 
+			if (playerO !== '') { 
 				messageO.textContent = playerO+ " has won the game!";
 				updateLeaderBoard(playerO);
 			} else {
