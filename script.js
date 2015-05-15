@@ -11,8 +11,14 @@ var playerX = '';
 var playerO = '';
 var intervalID;
 var timer;
+
 var messageX = document.querySelector('#message-X');
 var messageO = document.querySelector('#message-O');
+var inputX = document.querySelector('input#name-X');
+var inputO = document.querySelector('input#name-O');
+var leaderList = document.querySelector('.leader-board');
+
+var leaderBoard = [];
 
 
 //OBJECTS =============================================================================
@@ -223,18 +229,16 @@ var setHeights = function() {
 var takeTurn = function() {
 	timer = 10;
 	intervalID = window.setInterval(decreaseTimer, 1000);
-	//waiting for player to take turn
-
 	//switch player
 	if (turn === 'X') { turn = 'O' } else { turn = 'X' };
 };
 
 var newGame = function() {
 	//get player names
-	playerX = document.querySelector('input#name-X').value;
-	console.log(playerX);
-	playerO = document.querySelector('input#name-O').value;
-	console.log(playerO);
+	playerX = inputX.value;
+	playerO = inputO.value;
+	inputX.readOnly = true;
+	inputO.readOnly = true;
 	turn = first;
 	if (first === 'X') { first = 'O' } else { first = 'X' }; //alternate first turn between X and O (X always starts first game)
 	winner = '';
@@ -260,6 +264,7 @@ var decreaseTimer = function () {
 			messageX.textContent = "You are out of time!";
 			if (playerO != '') {
 			  messageO.textContent = playerO+ " has won the game!";
+			  // updateLeaderBoard(playerO);
 			} else {
 				messageO.textContent = "Player "+winner+ " has won the game!";
 			};
@@ -268,6 +273,7 @@ var decreaseTimer = function () {
 				winner = 'X';
 				messageO.textContent = "You are out of time!";
 			  messageX.textContent = playerX+ " has won the game!";
+			  // updateLeaderBoard(playerX);
 			} else {
 				messageX.textContent = "Player "+winner+ " has won the game!";
 			};
@@ -282,34 +288,92 @@ var processTurn = function(e) {
 	if (grid.setValue(pos, turn)) {
 		//stop timer
 		window.clearInterval(intervalID);
-		messageX.textContent = ' ';
-		messageO.textContent = ' ';
+		messageX.textContent = '';
+		messageO.textContent = '';
 		//update grid
 		grid.draw();
 		winner = grid.getWinner();
 		if (winner === 'X') { 
 			if (playerX != '') { 
 				messageX.textContent = playerX+ " has won the game!";
+				updateLeaderBoard(playerX);
 			} else {
 				messageX.textContent = "Player "+winner+ " has won the game!";
 			};
+			inputX.readOnly = false;
+			inputO.readOnly = false;
 			return;
 		};
 		if (winner ===  'O') {
 			if (playerO != '') { 
 				messageO.textContent = playerO+ " has won the game!";
+				updateLeaderBoard(playerO);
 			} else {
 				messageO.textContent = "Player "+winner+ " has won the game!";
 			};
+			inputX.readOnly = false;
+			inputO.readOnly = false;
 			return;
 		};
 		if (winner ===  'draw') {
 			messageX.textContent = "Draw!";
 			messageO.textContent = "Draw!";
+			inputX.readOnly = false;
+			inputO.readOnly = false;
 			return;
 		};
 		takeTurn();
 	}
+};
+
+var updateLeaderBoard = function(winner) {
+	var winnerName = winner.toLowerCase();
+	winnerName = winnerName.trim();
+	var newWinner = undefined;
+	//get winner's name (if no name, then quit)
+	if (winner.length === 0) { return false }
+	//iterate through leader board array
+	//if name found, then increase wins
+	for (i=0; i < leaderBoard.length; i++) {
+		if (leaderBoard[i].name === winnerName) {
+			newWinner = leaderBoard[i];
+			newWinner.wins++;
+			console.log(newWinner.wins);
+			//adjust ranks if necessary
+			//find next rank up
+			for (j=0; j < leaderBoard.length; j++) {
+				if (leaderBoard[j].rank === (newWinner.rank-1)) {
+					if (newWinner.wins > leaderBoard[j].wins) {
+						newWinner.rank = leaderBoard[j].rank;
+						leaderBoard[j].rank = (newWinner.rank+1);
+					};
+				};
+			};
+			break;
+		};	
+	};
+	//if not, then create leader object (winner name, wins)
+	//add as last place rank
+	if (newWinner === undefined) {
+		var rank = leaderBoard.length + 1;
+		var newLeader = {name: winnerName, wins: 1, rank: rank};
+		leaderBoard.push(newLeader);
+		//add new list object
+		var newListItem = document.createElement('li');
+		newListItem.setAttribute('id', 'leader');
+		leaderList.appendChild(newListItem);
+	};
+	var leaders = document.querySelectorAll('#leader');
+	// console.log(leaders);
+	//update html list objects
+	for (i=0; i < leaders.length; i++) {
+		for (j=0; j < leaderBoard.length; j++) {
+			if (leaderBoard[j].rank === (i+1)) {
+				// console.log(leaderBoard[j]);
+				leaders[i].textContent = "Player: "+leaderBoard[j].name.toUpperCase()+" Games Won: "+leaderBoard[j].wins;
+			};
+		};
+	};
 };
 
 
