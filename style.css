@@ -9,6 +9,10 @@ h1 {
 
 }
 
+hr {
+	border: solid black 1px;
+}
+
 #left-column {
 	width: 60%;
 	float: left;
@@ -24,73 +28,190 @@ h1 {
 
 .grid {
 	width: 80%;
-	height: 600px;
 	margin-left: auto;
 	margin-right: auto;
-	border: solid black 1px;
-	background-color: white;
-
+	border: none;
+	background-color: none;
 }
 
 .row {
 	width: 100%;
 	line-height: 200px;
 	float: left;
-	border: solid green 1px;
+	border: none;
 	clear: both;
 
 }
 
 .square {
-	width: 33%;
-	height: 200px;
+	width: 32%;
+	height: 198px;
 	float: left;
-	border: solid red 1px;
 	color: black;
-	font-size: 100px;
+	font-size: 120px;
+	font-weight: 700;
 	text-align: center;
 	background-color: white;
-
+	border-color: black;
 }
 
-#win {
-	width: 90%;
-	text-align: center;
+/*set borders for each square position*/
+
+#top-left {
+	border-top: 0;
+	border-right: 2px;
+	border-bottom: 2px;
+	border-left: 0;
+	border-style: solid;
+	border-color: black;
 }
 
-.winner-board {
-	width: 90%;
-	height: 200px;
-	margin-left: 0;
-	border: solid black 1px;
-	background-color: white;
-
-
+#top-middle {
+	border-top: 0;
+	border-right: 2px;
+	border-bottom: 2px;
+	border-left: 2px;
+	border-style: solid;
+	border-color: black;
 }
 
-.name {
-	width: 30%;
-	height: 30px;
-	font-size: 18px;
-	display: inline;
+#top-right {
+	border-top: 0;
+	border-right: 0;
+	border-bottom: 2px;
+	border-left: 2px;
+	border-style: solid;
+	border-color: black;
 }
 
-#name-X {
-	color: black;
+#middle-left {
+	border-top: 2px;
+	border-right: 2px;
+	border-bottom: 2px;
+	border-left: 0;
+	border-style: solid;
+	border-color: black;
 }
 
-#name-O {
-	color: red;
+#center {
+	border-top: 2px;
+	border-right: 2px;
+	border-bottom: 2px;
+	border-left: 2px;
+	border-style: solid;
+	border-color: black;
 }
+
+#middle-right {
+	border-top: 2px;
+	border-right: 0;
+	border-bottom: 2px;
+	border-left: 2px;
+	border-style: solid;
+	border-color: black;
+}
+
+#bottom-left {
+	border-top: 2px;
+	border-right: 2px;
+	border-bottom: 0;
+	border-left: 0;
+	border-style: solid;
+	border-color: black;
+}
+
+#bottom-middle {
+	border-top: 2px;
+	border-right: 2px;
+	border-bottom: 0;
+	border-left: 2px;
+	border-style: solid;
+	border-color: black;
+}
+
+#bottom-right {
+	border-top: 2px;
+	border-right: 0;
+	border-bottom: 0;
+	border-left: 2px;
+	border-style: solid;
+	border-color: black;
+}
+
 
 .start-new {
-	width: 60%;
+	width: 40%;
 	height: 30px;
 	font-style: bold;
 	font-size: 18px;
 	color: white;
 	background-color: green;
+	float: left;
+	margin-bottom: 40px;
+}
 
+.caption {
+	text-align: left;
+	width: 23%;
+	clear: both;
+	float: left;
+	height: 50px;
+	font-weight: 700;
+	font-size: 25px;
+	margin: 10px 10px 0 0;	
+}
+
+#caption-X {
+	color: black;
+	
+}
+
+#caption-O {
+	color: red;
+
+}
+
+.name {
+	width: 40%;
+	height: 25px;
+	font-size: 14px;
+	font-weight: 700;
+	float: left;
+	margin: 10px 20px 0 20px;
+}
+
+#name-X {
+	color: black;
+		
+}
+
+#name-O {
+	color: red;
+
+}
+
+.message {
+  width: 95%;
+  clear: both;
+	text-align: left;
+	font-size: 20px;
+	font-weight: 700;
+	height: 30px;
+	line-height: 30px;
+	margin: 10px 0 10px 0;
+	background-color: white;
+	padding: 0 5px 0 5px;
+	border: solid lightgray 1px;
+}
+
+#message-X {
+	color: black;
+	
+}
+
+#message-O {
+	color: red;
+	
 }
 
 .timer {
@@ -104,5 +225,19 @@ h1 {
 
 #timer-O {
 	color: red;
+}
+
+#win {
+	width: 95%;
+	text-align: center;
+}
+
+.winner-board {
+	width: 95%;
+	height: 175px;
+	margin-left: auto;
+	margin-right: auto;
+	border: solid lightgray 1px;
+	background-color: white;
 }
 

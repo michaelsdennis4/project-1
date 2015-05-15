@@ -11,8 +11,8 @@ var playerX = '';
 var playerO = '';
 var intervalID;
 var timer;
-var timerX = document.querySelector('#timer-X');
-var timerO = document.querySelector('#timer-O');
+var messageX = document.querySelector('#message-X');
+var messageO = document.querySelector('#message-O');
 
 
 //OBJECTS =============================================================================
@@ -211,7 +211,14 @@ Grid.prototype.getWinner = function() {
 
 
 
-//FUNCTIONS ======================================================================
+//FUNCTIONS ==========================================================================
+
+var setHeights = function() {
+	//set height of grid to equal width
+	var grid = document.querySelector('.grid');
+	var width = grid.width;
+	grid.height = width;
+};
 
 var takeTurn = function() {
 	timer = 10;
@@ -231,8 +238,8 @@ var newGame = function() {
 	turn = first;
 	if (first === 'X') { first = 'O' } else { first = 'X' }; //alternate first turn between X and O (X always starts first game)
 	winner = '';
-	timerX.textContent = '';
-	timerO.textContent = '';
+	messageX.textContent = '';
+	messageO.textContent = '';
 	grid = new Grid();
 	grid.draw();
 	takeTurn();
@@ -240,9 +247,9 @@ var newGame = function() {
 
 var decreaseTimer = function () {
 	if (turn === 'X') {
-		timerX.textContent = "Your Turn: "+timer+" seconds left...";
+		messageX.textContent = "X's Turn: "+timer+" seconds left...";
 	} else if (turn === 'O') {
-		timerO.textContent = "Your Turn: "+timer+" seconds left...";
+		messageO.textContent = "O's Turn: "+timer+" seconds left...";
 	};
 	timer--;
 	if (timer < 0) { 
@@ -250,14 +257,21 @@ var decreaseTimer = function () {
 		window.clearInterval(intervalID);
 		if (turn === 'X') {
 			winner = 'O';
-			if (playerO != '') { winner = playerO };
+			messageX.textContent = "You are out of time!";
+			if (playerO != '') {
+			  messageO.textContent = playerO+ " has won the game!";
+			} else {
+				messageO.textContent = "Player "+winner+ " has won the game!";
+			};
 		} else if (turn === 'O') {
-			winner = 'X';
-			if (playerX != '') { winner = playerX };
-		};
-		window.alert("You are out of time!\r\n"+winner+ " has won the game!");
-		timerX.textContent = '';
-		timerO.textContent = '';
+			if (playerO != '') {
+				winner = 'X';
+				messageO.textContent = "You are out of time!";
+			  messageX.textContent = playerX+ " has won the game!";
+			} else {
+				messageX.textContent = "Player "+winner+ " has won the game!";
+			};
+		};	
 	};
 };
 
@@ -268,24 +282,30 @@ var processTurn = function(e) {
 	if (grid.setValue(pos, turn)) {
 		//stop timer
 		window.clearInterval(intervalID);
-		timerX.textContent = '';
-		timerO.textContent = '';
+		messageX.textContent = ' ';
+		messageO.textContent = ' ';
 		//update grid
 		grid.draw();
 		winner = grid.getWinner();
 		if (winner === 'X') { 
-			if (playerX != '') { winner = playerX };
-			window.alert(winner+ " has won the game!");
-			// timerX.textContent = winner+ " has won the game!";
+			if (playerX != '') { 
+				messageX.textContent = playerX+ " has won the game!";
+			} else {
+				messageX.textContent = "Player "+winner+ " has won the game!";
+			};
 			return;
 		};
 		if (winner ===  'O') {
-			if (playerY != '') { winner = playerY };
-			window.alert(winner+ " has won the game!");
-			// timerO.textContent = winner+ " has won the game!";
+			if (playerO != '') { 
+				messageO.textContent = playerO+ " has won the game!";
+			} else {
+				messageO.textContent = "Player "+winner+ " has won the game!";
+			};
+			return;
 		};
 		if (winner ===  'draw') {
-			window.alert("Draw!");
+			messageX.textContent = "Draw!";
+			messageO.textContent = "Draw!";
 			return;
 		};
 		takeTurn();
@@ -293,7 +313,9 @@ var processTurn = function(e) {
 };
 
 
-//EVENT LISTENERS=================================================================
+//EVENT LISTENERS===================================================================
+
+window.addEventListener('load', setHeights);
 
 document.querySelector('.grid').addEventListener('click', processTurn);
 
