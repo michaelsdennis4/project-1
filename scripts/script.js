@@ -33,13 +33,13 @@ var Square = function Square(id) {
 
 //methods
 Square.prototype.setValue = function(val) {
-	if (this._value.length > 0) { return false } //square already set
+	if (this._value.length > 0) { return false; } //square already set
 	this._value = val;
 	//set color depending on value
 	switch (val) {
 		case 'X': this.setColor('black'); break;
 		case 'O': this.setColor('red'); break;
-	};
+	}
 	return true; 
 };
 
@@ -55,7 +55,7 @@ Square.prototype.setBackgroundColor = function(color) {
 Square.prototype.setColor = function(color) {
 	//set color of text
 	document.querySelector('#'+this._id).style.color = color;
-}
+};
 
 
 //Row OBJECT ==========================================================================
@@ -65,9 +65,9 @@ var Row = function Row(sq1, sq2, sq3) {
 };
 
 Row.prototype.getValues = function() {
-	return this._squares.map = function(sq) {
+	return this._squares.map(function(sq) {
 		return sq.getValue();
-	}
+	});
 };
 
 Row.prototype.getStatus = function() {
@@ -78,18 +78,18 @@ Row.prototype.getStatus = function() {
 			case 'X': x++; break;
 			case 'O': o++; break;
 		}
-	};
-	if ((x > 0) && (o > 0)) { return 'mix' }; //mix, no winner possible on this row
+	}
+	if ((x > 0) && (o > 0)) { return 'mix' ;} //mix, no winner possible on this row
 	switch (x) {
 		case 1: return 'x';
 		case 2: return 'xx';
 		case 3: return 'xxx'; //winner	
-	};
+	}
 	switch (o) {
 		case 1: return 'o';
 		case 2: return 'oo';
 		case 3: return 'ooo'; //winner	
-	};
+	}
 	return 'empty'; //row empty
 };
 
@@ -170,7 +170,7 @@ Grid.prototype.setValue = function(pos, value) {
 		case 'bottom-left': return this._sqBottomLeft.setValue(value);
 		case 'bottom-middle': return this._sqBottomMiddle.setValue(value);
 		case 'bottom-right': return this._sqBottomRight.setValue(value);
-	};
+	}
 };
 
 Grid.prototype.draw = function() {
@@ -198,22 +198,22 @@ Grid.prototype.getWinner = function() {
 				this._rows[i].setColor('white');
 				this._rows[i].setBackgroundColor('green');
 				return 'O'; //o is winner
-		};
-	};
+		}
+	}
 	//if no winner and all squares are filled, then draw
 	var blank = 0;
-	for (var i=0; i < this._squares.length; i++) {
-		if (this._squares[i].getValue() === '') { blank++ }
-	};
+	for (i=0; i < this._squares.length; i++) {
+		if (this._squares[i].getValue() === '') { blank++; }
+	}
 	if (blank === 0) { 
 		this._squares.map(function(sq) {
 			sq.setColor('white');
 			sq.setBackgroundColor('red');
 		});
 		return 'draw';
-	};
+	}
 	return false; //no winner yet
-}
+};
 
 
 
@@ -230,7 +230,7 @@ var takeTurn = function() {
 	timer = 10;
 	intervalID = window.setInterval(decreaseTimer, 1000);
 	//switch player
-	if (turn === 'X') { turn = 'O' } else { turn = 'X' };
+	if (turn === 'X') { turn = 'O'; } else { turn = 'X'; }
 };
 
 var newGame = function() {
@@ -240,7 +240,7 @@ var newGame = function() {
 	inputX.readOnly = true;
 	inputO.readOnly = true;
 	turn = first;
-	if (first === 'X') { first = 'O' } else { first = 'X' }; //alternate first turn between X and O (X always starts first game)
+	if (first === 'X') { first = 'O'; } else { first = 'X'; } //alternate first turn between X and O (X always starts first game)
 	winner = '';
 	messageX.textContent = '';
 	messageO.textContent = '';
@@ -255,14 +255,14 @@ var decreaseTimer = function () {
 			messageX.textContent = playerX+"'s Turn: "+timer+" seconds left...";
 		} else {
 			messageX.textContent = "Player X's Turn: "+timer+" seconds left...";
-		};		
+		}		
 	} else if (turn === 'O') {
 		if (playerO !== '') {
 			messageO.textContent = playerO+"'s Turn: "+timer+" seconds left...";
 		} else {
 			messageO.textContent = "Player O's Turn: "+timer+" seconds left...";
-		};
-	};
+		}
+	}
 	timer--;
 	if (timer < 0) { 
 		//game over, stop timer
@@ -275,7 +275,7 @@ var decreaseTimer = function () {
 			  updateLeaderBoard(playerO);
 			} else {
 				messageO.textContent = "Player "+winner+ " has won the game!";
-			};
+			}
 		} else if (turn === 'O') {
 			winner = 'X';
 			messageO.textContent = "You are out of time!";
@@ -284,16 +284,16 @@ var decreaseTimer = function () {
 			  updateLeaderBoard(playerX);
 			} else {
 				messageX.textContent = "Player "+winner+ " has won the game!";
-			};
-		};
+			}
+		}
 		inputX.readOnly = false;
 		inputO.readOnly = false;	
-	};
+	}
 };
 
 var processTurn = function(e) {
-	if (!grid) { return false } //no active game
-	if (winner.length > 0) { return false } //game already won
+	if (!grid) { return false; } //no active game
+	if (winner.length > 0) { return false; } //game already won
 	var pos = e.target.id; //id for square clicked on
 	if (grid.setValue(pos, turn)) {
 		//stop timer
@@ -309,29 +309,29 @@ var processTurn = function(e) {
 				updateLeaderBoard(playerX);
 			} else {
 				messageX.textContent = "Player "+winner+ " has won the game!";
-			};
+			}
 			inputX.readOnly = false;
 			inputO.readOnly = false;
 			return;
-		};
+		}
 		if (winner ===  'O') {
 			if (playerO !== '') { 
 				messageO.textContent = playerO+ " has won the game!";
 				updateLeaderBoard(playerO);
 			} else {
 				messageO.textContent = "Player "+winner+ " has won the game!";
-			};
+			}
 			inputX.readOnly = false;
 			inputO.readOnly = false;
 			return;
-		};
+		}
 		if (winner ===  'draw') {
 			messageX.textContent = "Draw!";
 			messageO.textContent = "Draw!";
 			inputX.readOnly = false;
 			inputO.readOnly = false;
 			return;
-		};
+		}
 		takeTurn();
 	}
 };
@@ -339,9 +339,9 @@ var processTurn = function(e) {
 var updateLeaderBoard = function(winner) {
 	var winnerName = winner.toLowerCase();
 	winnerName = winnerName.trim();
-	var newWinner = undefined;
+	var newWinner;
 	//get winner's name (if no name, then quit)
-	if (winner.length === 0) { return false }
+	if (winner.length === 0) { return false; }
 	//iterate through leader board array
 	//if name found, then increase wins
 	for (i=0; i < leaderBoard.length; i++) {
@@ -356,12 +356,12 @@ var updateLeaderBoard = function(winner) {
 					if (newWinner.wins > leaderBoard[j].wins) {
 						newWinner.rank = leaderBoard[j].rank;
 						leaderBoard[j].rank = (newWinner.rank+1);
-					};
-				};
-			};
+					}
+				}
+			}
 			break;
-		};	
-	};
+		}	
+	}
 	//if not, then create leader object (winner name, wins)
 	//add as last place rank
 	if (newWinner === undefined) {
@@ -372,7 +372,7 @@ var updateLeaderBoard = function(winner) {
 		var newListItem = document.createElement('li');
 		newListItem.setAttribute('id', 'leader');
 		leaderList.appendChild(newListItem);
-	};
+	}
 	var leaders = document.querySelectorAll('#leader');
 	// console.log(leaders);
 	//update html list objects
@@ -381,9 +381,9 @@ var updateLeaderBoard = function(winner) {
 			if (leaderBoard[j].rank === (i+1)) {
 				// console.log(leaderBoard[j]);
 				leaders[i].textContent = "Player: "+leaderBoard[j].name.toUpperCase()+" --- Games Won: "+leaderBoard[j].wins;
-			};
-		};
-	};
+			}
+		}
+	}
 };
 
 
