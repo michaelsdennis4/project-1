@@ -208,6 +208,12 @@ hr {
 
 }
 
+.computer {
+	font-size: 14px;
+	font-weight: 700;
+	margin-top: 20px;
+}
+
 .message {
   width: 95%;
   clear: both;

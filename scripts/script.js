@@ -4,22 +4,23 @@ console.log('script.js linked');
 
 var grid; 
 
-var first = '';
-var turn = 'X';
+var first = 'X';
+var turn;
 var winner = '';
 var playerX = '';
 var playerO = '';
 var intervalID;
 var timer;
+var computerPlay = false;
 
 var messageX = document.querySelector('#message-X');
 var messageO = document.querySelector('#message-O');
 var inputX = document.querySelector('input#name-X');
 var inputO = document.querySelector('input#name-O');
+var computerChecked = document.querySelector('.computer');
 var leaderList = document.querySelector('.leader-board');
 
 var leaderBoard = [];
-
 
 //OBJECTS =============================================================================
 
@@ -32,6 +33,7 @@ var Square = function Square(id) {
 };
 
 //methods
+
 Square.prototype.setValue = function(val) {
 	if (this._value.length > 0) { return false; } //square already set
 	this._value = val;
@@ -40,7 +42,7 @@ Square.prototype.setValue = function(val) {
 		case 'X': this.setColor('black'); break;
 		case 'O': this.setColor('red'); break;
 	}
-	return true; 
+	return true; //value set
 };
 
 Square.prototype.getValue = function() {
@@ -63,6 +65,8 @@ Square.prototype.setColor = function(color) {
 var Row = function Row(sq1, sq2, sq3) {
 	this._squares = [sq1, sq2, sq3]; //array of pointers to square objects
 };
+
+//methods
 
 Row.prototype.getValues = function() {
 	return this._squares.map(function(sq) {
@@ -173,6 +177,8 @@ Grid.prototype.setValue = function(pos, value) {
 	}
 };
 
+//methods
+
 Grid.prototype.draw = function() {
 	document.querySelector('#top-left').textContent = this._sqTopLeft.getValue();
 	document.querySelector('#top-middle').textContent = this._sqTopMiddle.getValue();
@@ -226,19 +232,13 @@ var setHeights = function() {
 	grid.height = width;
 };
 
-var takeTurn = function() {
-	timer = 10;
-	intervalID = window.setInterval(decreaseTimer, 1000);
-	//switch player
-	if (turn === 'X') { turn = 'O'; } else { turn = 'X'; }
-};
-
 var newGame = function() {
 	//get player names
 	playerX = inputX.value.trim();
 	playerO = inputO.value.trim();
 	inputX.readOnly = true;
 	inputO.readOnly = true;
+	computerChecked.readOnly = true;
 	turn = first;
 	if (first === 'X') { first = 'O'; } else { first = 'X'; } //alternate first turn between X and O (X always starts first game)
 	winner = '';
@@ -247,6 +247,21 @@ var newGame = function() {
 	grid = new Grid();
 	grid.draw();
 	takeTurn();
+};
+
+var takeTurn = function() {
+	console.log(turn);
+	// //if computer is playing
+	if ((computerPlay) && (turn === 'O')) {
+		messageO.textContent = 'Computer is playing';
+		getComputerMove();
+		updateGrid();
+		// window.setTimeout(getComputerMove(), 2000); //set small delay
+		// messageO.textContent = '';
+	} else {
+		timer = 10;
+		intervalID = window.setInterval(decreaseTimer, 1000);
+	}
 };
 
 var decreaseTimer = function () {
@@ -271,23 +286,24 @@ var decreaseTimer = function () {
 			winner = 'O';
 			messageX.textContent = "You are out of time!";
 			if (playerO !== '') {
-			  messageO.textContent = playerO+ " has won the game!";
+			  messageO.textContent = playerO+ " wins!";
 			  updateLeaderBoard(playerO);
 			} else {
-				messageO.textContent = "Player "+winner+ " has won the game!";
+				messageO.textContent = "Player "+winner+ " wins!";
 			}
 		} else if (turn === 'O') {
 			winner = 'X';
 			messageO.textContent = "You are out of time!";
 			if (playerX !== '') {
-			  messageX.textContent = playerX+ " has won the game!";
+			  messageX.textContent = playerX+ " wins!";
 			  updateLeaderBoard(playerX);
 			} else {
-				messageX.textContent = "Player "+winner+ " has won the game!";
+				messageX.textContent = "Player "+winner+ " wins!";
 			}
 		}
 		inputX.readOnly = false;
-		inputO.readOnly = false;	
+		inputO.readOnly = false;
+		computerChecked.readOnly = false;	
 	}
 };
 
@@ -300,40 +316,138 @@ var processTurn = function(e) {
 		window.clearInterval(intervalID);
 		messageX.textContent = '';
 		messageO.textContent = '';
-		//update grid
-		grid.draw();
-		winner = grid.getWinner();
-		if (winner === 'X') { 
-			if (playerX !== '') { 
-				messageX.textContent = playerX+ " has won the game!";
-				updateLeaderBoard(playerX);
-			} else {
-				messageX.textContent = "Player "+winner+ " has won the game!";
-			}
-			inputX.readOnly = false;
-			inputO.readOnly = false;
-			return;
+		updateGrid();
+	}	
+};
+
+var updateGrid = function() {
+	grid.draw();
+	winner = grid.getWinner();
+	if (winner === 'X') { 
+		if (playerX !== '') { 
+			messageX.textContent = playerX+ " has won the game!";
+			updateLeaderBoard(playerX);
+		} else {
+			messageX.textContent = "Player "+winner+ " has won the game!";
 		}
-		if (winner ===  'O') {
-			if (playerO !== '') { 
-				messageO.textContent = playerO+ " has won the game!";
-				updateLeaderBoard(playerO);
-			} else {
-				messageO.textContent = "Player "+winner+ " has won the game!";
-			}
-			inputX.readOnly = false;
-			inputO.readOnly = false;
-			return;
-		}
-		if (winner ===  'draw') {
-			messageX.textContent = "Draw!";
-			messageO.textContent = "Draw!";
-			inputX.readOnly = false;
-			inputO.readOnly = false;
-			return;
-		}
-		takeTurn();
+		inputX.readOnly = false;
+		inputO.readOnly = false;
+		computerChecked.readOnly = false;	
+		return;
 	}
+	if (winner ===  'O') {
+		if (playerO !== '') { 
+			messageO.textContent = playerO+ " has won the game!";
+			updateLeaderBoard(playerO);
+		} else {
+			messageO.textContent = "Player "+winner+ " has won the game!";
+		}
+		inputX.readOnly = false;
+		inputO.readOnly = false;
+		computerChecked.readOnly = false;	
+		return;
+	}
+	if (winner ===  'draw') {
+		messageX.textContent = "Draw!";
+		messageO.textContent = "Draw!";
+		inputX.readOnly = false;
+		inputO.readOnly = false;
+		computerChecked.readOnly = false;	
+		return;
+	}
+	//switch player
+	if (turn === 'X') { turn = 'O'; } else { turn = 'X'; }
+	takeTurn();
+};
+
+var getComputerMove = function() {
+	//get row statuses (assume computer is player 'O')
+	console.log('computer playing');
+	//if 'oo' then fill and win 
+	for (var i=0; i < grid._rows.length; i++) {
+		if (grid._rows[i].getStatus() === 'oo') {
+			for (var j=0; j < grid._rows[i]._squares.length; j++) {
+				if (grid._rows[i]._squares[j].getValue() === '') {
+					grid._rows[i]._squares[j].setValue('O');
+					return;
+				}
+			}
+		}
+	}
+	//if 'xx' then fill and block
+	for (var i=0; i < grid._rows.length; i++) {
+		if (grid._rows[i].getStatus() === 'xx') {
+			for (var j=0; j < grid._rows[i]._squares.length; j++) {
+				if (grid._rows[i]._squares[j].getValue() === '') {
+					grid._rows[i]._squares[j].setValue('O');		
+					return;
+				}
+			}
+		}
+	}
+	//corners
+	var tl = grid._sqTopLeft.getValue()
+	var tr = grid._sqTopRight.getValue()
+	var br = grid._sqBottomRight.getValue();
+	var bl = grid._sqBottomLeft.getValue();
+	//if all corners open, then pick random
+	if ((tl === '') && (tr === '') && (br === '') && (bl === '')) {
+		var ran = (Math.random() * 4);
+		ran = Math.floor(ran);
+		console.log(ran);
+		switch (ran) {
+			case 1: grid._sqTopLeft.setValue('O'); return;
+			case 2: grid._sqTopRight.setValue('O'); return;
+			case 3: grid._sqBottomRight.setValue('O'); return;
+			case 4: grid._sqBottomLeft.setValue('O'); return;
+		}
+	}
+	//search for 'O', if found then try for diagonal
+	if (tl === 'O') { 
+		if (grid._sqBottomRight.setValue('O')) { return; }
+	}
+	if (tr === 'O') { 
+		if (grid._sqBottomLeft.setValue('O')) { return; }
+	}
+	if (br === 'O') { 
+		if (grid._sqTopLeft.setValue('O')) { return; }
+	}
+	if (bl === 'O') { 
+		if (grid._sqTopRight.setValue('O')) { return; }
+	}
+	//then try for next available open clockwise
+	if (tl === 'O') { 
+		if (grid._sqTopRight.setValue('O')) { return; }
+	}
+	if (tr === 'O') { 
+		if (grid._sqBottomRight.setValue('O')) { return; }
+	}
+	if (br === 'O') { 
+		if (grid._sqBottomLeft.setValue('O')) { return; }
+	}
+	if (bl === 'O') { 
+		if (grid._sqTopLeft.setValue('O')) { return; }
+	}
+	//fill any open corner
+	if (tl === '') { 
+		if (grid._sqTopLeft.setValue('O')) { return; }
+	}
+	if (tr === '') { 
+		if (grid._sqTopRight.setValue('O')) { return; }
+	}
+	if (br === '') { 
+		if (grid._sqBottomRight.setValue('O')) { return; }
+	}
+	if (bl === '') { 
+		if (grid._sqBottomLeft.setValue('O')) { return; }
+	}
+	//if no corners open then fill center
+	if (grid._sqCenter.setValue('O')) { return; }
+	//if no center then fill edge squares
+	if (grid._sqMiddleLeft.setValue('O')) { return; }
+	if (grid._sqBottomMiddle.setValue('O')) { return; }
+	if (grid._sqTopMiddle.setValue('O')) { return; }
+	if (grid._sqMiddleRight.setValue('O')) { return; }
 };
 
 var updateLeaderBoard = function(winner) {
@@ -386,6 +500,19 @@ var updateLeaderBoard = function(winner) {
 	}
 };
 
+var setComputerPlay = function() {
+	console.log(computerChecked.checked);
+	if (computerChecked.checked === true) {
+		computerPlay = true;
+		inputO.value = 'HAL';
+		inputO.readOnly = true;
+	} else {
+		computerPlay = false;
+		inputO.value = '';
+		inputO.readOnly = false;
+	}
+};
+
 
 //EVENT LISTENERS===================================================================
 
@@ -395,8 +522,12 @@ document.querySelector('.grid').addEventListener('click', processTurn);
 
 document.querySelector('.start-new').addEventListener('click', newGame);
 
+computerChecked.addEventListener('click', setComputerPlay);
+
 
 //INITIALIZATION ===================================================================
+
+computerChecked.checked = false;
 
 
 
