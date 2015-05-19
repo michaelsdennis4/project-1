@@ -394,7 +394,6 @@ var getComputerMove = function() {
 	if ((tl === '') && (tr === '') && (br === '') && (bl === '')) {
 		var ran = (Math.random() * 4);
 		ran = Math.floor(ran);
-		console.log(ran);
 		switch (ran) {
 			case 1: grid._sqTopLeft.setValue('O'); return;
 			case 2: grid._sqTopRight.setValue('O'); return;
@@ -402,9 +401,40 @@ var getComputerMove = function() {
 			case 4: grid._sqBottomLeft.setValue('O'); return;
 		}
 	}
-	//if 'X' already in one of the the corners then try to fill center
-	if ((tl === 'X') || (tr === 'X') || (br === 'X') || (bl === 'X')) {
+	//if three corners filled then fill center
+	var filled = 0;
+	if (tl !== '') { filled++; }
+	if (tr !== '') { filled++; }
+	if (bl !== '') { filled++; }
+	if (br !== '') { filled++; }
+	if (filled === 3) {
 		if (grid._sqCenter.setValue('O')) { return; }
+	}
+	//search for 'X', if found then try for diagonal
+	if (tl === 'X') { 
+		if (grid._sqBottomRight.setValue('O')) { return; }
+	}
+	if (tr === 'X') { 
+		if (grid._sqBottomLeft.setValue('O')) { return; }
+	}
+	if (br === 'X') { 
+		if (grid._sqTopLeft.setValue('O')) { return; }
+	}
+	if (bl === 'X') { 
+		if (grid._sqTopRight.setValue('O')) { return; }
+	}
+	//if 'X' already in one of the the corners then fill to nearest clockwise corner
+	if (tl === 'X') { 
+		if (grid._sqTopRight.setValue('O')) { return; }
+	}
+	if (tr === 'X') { 
+		if (grid._sqBottomRight.setValue('O')) { return; }
+	}
+	if (br === 'X') { 
+		if (grid._sqBottomLeft.setValue('O')) { return; }
+	}
+	if (bl === 'X') { 
+		if (grid._sqTopLeft.setValue('O')) { return; }
 	}
 	//search for 'O', if found then try for diagonal
 	if (tl === 'O') { 
