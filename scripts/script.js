@@ -402,6 +402,10 @@ var getComputerMove = function() {
 			case 4: grid._sqBottomLeft.setValue('O'); return;
 		}
 	}
+	//if 'X' already in one of the the corners then try to fill center
+	if ((tl === 'X') || (tr === 'X') || (br === 'X') || (bl === 'X')) {
+		if (grid._sqCenter.setValue('O')) { return; }
+	}
 	//search for 'O', if found then try for diagonal
 	if (tl === 'O') { 
 		if (grid._sqBottomRight.setValue('O')) { return; }
