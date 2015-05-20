@@ -238,7 +238,7 @@ var newGame = function() {
 	playerO = inputO.value.trim();
 	inputX.readOnly = true;
 	inputO.readOnly = true;
-	computerChecked.readOnly = true;
+	computerChecked.disabled = true;
 	turn = first;
 	if (first === 'X') { first = 'O'; } else { first = 'X'; } //alternate first turn between X and O (X always starts first game)
 	winner = '';
@@ -303,7 +303,7 @@ var decreaseTimer = function () {
 		}
 		inputX.readOnly = false;
 		inputO.readOnly = false;
-		computerChecked.readOnly = false;	
+		computerChecked.disabled = false;	
 	}
 };
 
@@ -332,7 +332,7 @@ var updateGrid = function() {
 		}
 		inputX.readOnly = false;
 		inputO.readOnly = false;
-		computerChecked.readOnly = false;	
+		computerChecked.disabled = false;	
 		return;
 	}
 	if (winner ===  'O') {
@@ -344,7 +344,7 @@ var updateGrid = function() {
 		}
 		inputX.readOnly = false;
 		inputO.readOnly = false;
-		computerChecked.readOnly = false;	
+		computerChecked.disabled = false;	
 		return;
 	}
 	if (winner ===  'draw') {
@@ -352,7 +352,7 @@ var updateGrid = function() {
 		messageO.textContent = "Draw!";
 		inputX.readOnly = false;
 		inputO.readOnly = false;
-		computerChecked.readOnly = false;	
+		computerChecked.disabled = false;	
 		return;
 	}
 	//switch player
