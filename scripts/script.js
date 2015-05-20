@@ -410,31 +410,35 @@ var getComputerMove = function() {
 	if (filled === 3) {
 		if (grid._sqCenter.setValue('O')) { return; }
 	}
-	//search for 'X', if found then try for diagonal
+	//search for 'X' in corners, if found then fill next adjacent inside edge
+	//if none, then fill center
 	if (tl === 'X') { 
-		if (grid._sqBottomRight.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return; }
+		if (grid._sqTopMiddle.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqBottomMiddle.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
 	}
-	if (tr === 'X') { 
-		if (grid._sqBottomLeft.setValue('O')) { return; }
+	if (tr === 'X') {
+		if (grid._sqCenter.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqBottomMiddle.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqTopMiddle.setValue('O')) { return; }
 	}
 	if (br === 'X') { 
-		if (grid._sqTopLeft.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return; }
+		if (grid._sqBottomMiddle.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqTopMiddle.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
 	}
 	if (bl === 'X') { 
-		if (grid._sqTopRight.setValue('O')) { return; }
-	}
-	//if 'X' already in one of the the corners then fill to nearest clockwise corner
-	if (tl === 'X') { 
-		if (grid._sqTopRight.setValue('O')) { return; }
-	}
-	if (tr === 'X') { 
-		if (grid._sqBottomRight.setValue('O')) { return; }
-	}
-	if (br === 'X') { 
-		if (grid._sqBottomLeft.setValue('O')) { return; }
-	}
-	if (bl === 'X') { 
-		if (grid._sqTopLeft.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqTopMiddle.setValue('O')) { return; }
+		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqBottomMiddle.setValue('O')) { return; }
 	}
 	//search for 'O', if found then try for diagonal
 	if (tl === 'O') { 
