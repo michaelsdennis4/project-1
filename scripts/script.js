@@ -12,6 +12,9 @@ var playerO = '';
 var intervalID;
 var timer;
 var computerPlay = false;
+var leaderBoard = [];
+
+//selectors
 
 var messageX = document.querySelector('#message-X');
 var messageO = document.querySelector('#message-O');
@@ -19,8 +22,10 @@ var inputX = document.querySelector('input#name-X');
 var inputO = document.querySelector('input#name-O');
 var computerChecked = document.querySelector('.computer');
 var leaderList = document.querySelector('.leader-board');
+var startButton = document.querySelector('.start-new');
+var inProgress = document.querySelector('.progress');
 
-var leaderBoard = [];
+
 
 //OBJECTS =============================================================================
 
@@ -232,13 +237,29 @@ var setHeights = function() {
 	grid.height = width;
 };
 
+var disableControls = function() {
+	inputX.readOnly = true;
+	inputO.readOnly = true;
+	computerChecked.disabled = true;
+	startButton.disabled = true;
+	startButton.style.background = "gray" ;
+	inProgress.style.color = "green";
+}
+
+var enableControls = function() {
+	inputX.readOnly = false;
+	inputO.readOnly = false;
+	computerChecked.disabled = false;
+	startButton.disabled = false;
+	startButton.style.background = "green";
+	inProgress.style.color = "white";
+}
+
 var newGame = function() {
 	//get player names
 	playerX = inputX.value.trim();
 	playerO = inputO.value.trim();
-	inputX.readOnly = true;
-	inputO.readOnly = true;
-	computerChecked.disabled = true;
+	disableControls();
 	turn = first;
 	if (first === 'X') { first = 'O'; } else { first = 'X'; } //alternate first turn between X and O (X always starts first game)
 	winner = '';
@@ -250,7 +271,6 @@ var newGame = function() {
 };
 
 var takeTurn = function() {
-	console.log(turn);
 	// //if computer is playing
 	if ((computerPlay) && (turn === 'O')) {
 		messageO.textContent = 'Computer is playing';
@@ -301,9 +321,7 @@ var decreaseTimer = function () {
 				messageX.textContent = "Player "+winner+ " wins!";
 			}
 		}
-		inputX.readOnly = false;
-		inputO.readOnly = false;
-		computerChecked.disabled = false;	
+		enableControls();
 	}
 };
 
@@ -330,9 +348,7 @@ var updateGrid = function() {
 		} else {
 			messageX.textContent = "Player "+winner+ " has won the game!";
 		}
-		inputX.readOnly = false;
-		inputO.readOnly = false;
-		computerChecked.disabled = false;	
+		enableControls();
 		return;
 	}
 	if (winner ===  'O') {
@@ -342,17 +358,13 @@ var updateGrid = function() {
 		} else {
 			messageO.textContent = "Player "+winner+ " has won the game!";
 		}
-		inputX.readOnly = false;
-		inputO.readOnly = false;
-		computerChecked.disabled = false;	
+		enableControls();
 		return;
 	}
 	if (winner ===  'draw') {
 		messageX.textContent = "Draw!";
 		messageO.textContent = "Draw!";
-		inputX.readOnly = false;
-		inputO.readOnly = false;
-		computerChecked.disabled = false;	
+		enableControls();
 		return;
 	}
 	//switch player
@@ -362,7 +374,7 @@ var updateGrid = function() {
 
 var getComputerMove = function() {
 	//get row statuses (assume computer is player 'O')
-	console.log('computer playing');
+
 	//if 'oo' then fill and win 
 	for (var i=0; i < grid._rows.length; i++) {
 		if (grid._rows[i].getStatus() === 'oo') {
@@ -386,8 +398,8 @@ var getComputerMove = function() {
 		}
 	}
 	//corners
-	var tl = grid._sqTopLeft.getValue()
-	var tr = grid._sqTopRight.getValue()
+	var tl = grid._sqTopLeft.getValue();
+	var tr = grid._sqTopRight.getValue();
 	var br = grid._sqBottomRight.getValue();
 	var bl = grid._sqBottomLeft.getValue();
 	//if all corners open, then pick random
@@ -500,7 +512,6 @@ var updateLeaderBoard = function(winner) {
 		if (leaderBoard[i].name === winnerName) {
 			newWinner = leaderBoard[i];
 			newWinner.wins++;
-			console.log(newWinner.wins);
 			//adjust ranks if necessary
 			//find next rank up
 			for (j=0; j < leaderBoard.length; j++) {
@@ -526,12 +537,10 @@ var updateLeaderBoard = function(winner) {
 		leaderList.appendChild(newListItem);
 	}
 	var leaders = document.querySelectorAll('#leader');
-	// console.log(leaders);
 	//update html list objects
 	for (i=0; i < leaders.length; i++) {
 		for (j=0; j < leaderBoard.length; j++) {
 			if (leaderBoard[j].rank === (i+1)) {
-				// console.log(leaderBoard[j]);
 				leaders[i].textContent = "Player: "+leaderBoard[j].name.toUpperCase()+" --- Games Won: "+leaderBoard[j].wins;
 			}
 		}
@@ -539,7 +548,6 @@ var updateLeaderBoard = function(winner) {
 };
 
 var setComputerPlay = function() {
-	console.log(computerChecked.checked);
 	if (computerChecked.checked === true) {
 		computerPlay = true;
 		inputO.value = 'HAL';
@@ -558,7 +566,7 @@ window.addEventListener('load', setHeights);
 
 document.querySelector('.grid').addEventListener('click', processTurn);
 
-document.querySelector('.start-new').addEventListener('click', newGame);
+startButton.addEventListener('click', newGame);
 
 computerChecked.addEventListener('click', setComputerPlay);
 

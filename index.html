@@ -10,10 +10,11 @@
 <body>
 	<header>
 		<h1 class='headline'>Let's Play TIC TAC TOE!</h1>
-		<!-- <hr> -->
 	</header>
 
 	<div id='left-column'>
+
+		<p>Click on "Start New Game" then click on the squares to play</p>
 
 		<div class='grid'>
 			<div class='row'>
@@ -42,6 +43,7 @@
 		<h2>Enter players' names (optional) to begin then press 'Start New Game'.</h2>
 
 		<button class='start-new' id='player'>Start New Game</button>
+		<h3 class="progress">Game in Progress!</h3>
 
 		<div class='player'>
 			<div class='caption' id="caption-X">Player X:</div>
@@ -52,7 +54,7 @@
 		<div class='player'>
 			<div class='caption' id="caption-O">Player O:</div>
 			<input type='text' class='name' id='name-O' placeholder="Enter player O's name here">
-			<input type='checkbox' class='computer' id='computer-O'>Computer
+			<input type='checkbox' class='computer'>Computer
 			<div class='message' id="message-O"></div>
 		</div>
 
