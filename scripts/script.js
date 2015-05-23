@@ -14,7 +14,7 @@ var timer;
 var computerPlay = false;
 var leaderBoard = [];
 
-//selectors
+//query selectors
 
 var messageX = document.querySelector('#message-X');
 var messageO = document.querySelector('#message-O');
@@ -24,7 +24,16 @@ var computerChecked = document.querySelector('.computer');
 var leaderList = document.querySelector('.leader-board');
 var startButton = document.querySelector('.start-new');
 var inProgress = document.querySelector('.progress');
-
+var vGrid = document.querySelector('.grid');
+var vsqTopLeft = document.querySelector('#top-left');
+var vsqTopMiddle = document.querySelector('#top-middle');
+var vsqTopRight = document.querySelector('#top-right');
+var vsqMiddleLeft = document.querySelector('#middle-left');
+var vsqCenter = document.querySelector('#center');
+var vsqMiddleRight = document.querySelector('#middle-right');
+var vsqBottomLeft = document.querySelector('#bottom-left');
+var vsqBottomMiddle = document.querySelector('#bottom-middle');
+var vsqBottomRight = document.querySelector('#bottom-right');
 
 
 //OBJECTS =============================================================================
@@ -185,15 +194,15 @@ Grid.prototype.setValue = function(pos, value) {
 //methods
 
 Grid.prototype.draw = function() {
-	document.querySelector('#top-left').textContent = this._sqTopLeft.getValue();
-	document.querySelector('#top-middle').textContent = this._sqTopMiddle.getValue();
-	document.querySelector('#top-right').textContent = this._sqTopRight.getValue();
-	document.querySelector('#middle-left').textContent = this._sqMiddleLeft.getValue();
-	document.querySelector('#center').textContent = this._sqCenter.getValue();
-	document.querySelector('#middle-right').textContent = this._sqMiddleRight.getValue();
-	document.querySelector('#bottom-left').textContent = this._sqBottomLeft.getValue();
-	document.querySelector('#bottom-middle').textContent = this._sqBottomMiddle.getValue();
-	document.querySelector('#bottom-right').textContent = this._sqBottomRight.getValue();
+	vsqTopLeft.textContent = this._sqTopLeft.getValue();
+	vsqTopMiddle.textContent = this._sqTopMiddle.getValue();
+	vsqTopRight.textContent = this._sqTopRight.getValue();
+	vsqMiddleLeft.textContent = this._sqMiddleLeft.getValue();
+	vsqCenter.textContent = this._sqCenter.getValue();
+	vsqMiddleRight.textContent = this._sqMiddleRight.getValue();
+	vsqBottomLeft.textContent = this._sqBottomLeft.getValue();
+	vsqBottomMiddle.textContent = this._sqBottomMiddle.getValue();
+	vsqBottomRight.textContent = this._sqBottomRight.getValue();
 };
 
 Grid.prototype.getWinner = function() {
@@ -226,15 +235,25 @@ Grid.prototype.getWinner = function() {
 	return false; //no winner yet
 };
 
+Grid.prototype.setBackgroundColor = function(color) {
+	this._squares.map( function(sq) {
+		sq.setBackgroundColor(color);
+	});
+};
+
+Grid.prototype.setColor = function(color) {
+	this._squares.map( function(sq) {
+		sq.setColor(color);
+	});
+};
 
 
 //FUNCTIONS ==========================================================================
 
 var setHeights = function() {
 	//set height of grid to equal width
-	var grid = document.querySelector('.grid');
-	var width = grid.width;
-	grid.height = width;
+	var width = vGrid.width;
+	vGrid.height = width;
 };
 
 var disableControls = function() {
@@ -244,7 +263,7 @@ var disableControls = function() {
 	startButton.disabled = true;
 	startButton.style.background = "gray" ;
 	inProgress.style.color = "green";
-}
+};
 
 var enableControls = function() {
 	inputX.readOnly = false;
@@ -253,7 +272,7 @@ var enableControls = function() {
 	startButton.disabled = false;
 	startButton.style.background = "green";
 	inProgress.style.color = "white";
-}
+};
 
 var newGame = function() {
 	//get player names
@@ -271,13 +290,13 @@ var newGame = function() {
 };
 
 var takeTurn = function() {
+	messageO.textContent = '';
+	messageX.textContent = '';
 	// //if computer is playing
 	if ((computerPlay) && (turn === 'O')) {
-		messageO.textContent = 'Computer is playing';
+		messageO.textContent = 'HAL is playing';
 		getComputerMove();
-		updateGrid();
-		// window.setTimeout(getComputerMove(), 2000); //set small delay
-		// messageO.textContent = '';
+		window.setTimeout(updateGrid, 1000); //set small delay
 	} else {
 		timer = 10;
 		intervalID = window.setInterval(decreaseTimer, 1000);
@@ -343,20 +362,20 @@ var updateGrid = function() {
 	winner = grid.getWinner();
 	if (winner === 'X') { 
 		if (playerX !== '') { 
-			messageX.textContent = playerX+ " has won the game!";
+			messageX.textContent = playerX+ " wins!";
 			updateLeaderBoard(playerX);
 		} else {
-			messageX.textContent = "Player "+winner+ " has won the game!";
+			messageX.textContent = "Player "+winner+ " wins!";
 		}
 		enableControls();
 		return;
 	}
 	if (winner ===  'O') {
 		if (playerO !== '') { 
-			messageO.textContent = playerO+ " has won the game!";
+			messageO.textContent = playerO+ " wins!";
 			updateLeaderBoard(playerO);
 		} else {
-			messageO.textContent = "Player "+winner+ " has won the game!";
+			messageO.textContent = "Player "+winner+ " wins!";
 		}
 		enableControls();
 		return;
@@ -374,14 +393,13 @@ var updateGrid = function() {
 
 var getComputerMove = function() {
 	//get row statuses (assume computer is player 'O')
-
 	//if 'oo' then fill and win 
 	for (var i=0; i < grid._rows.length; i++) {
 		if (grid._rows[i].getStatus() === 'oo') {
 			for (var j=0; j < grid._rows[i]._squares.length; j++) {
 				if (grid._rows[i]._squares[j].getValue() === '') {
 					grid._rows[i]._squares[j].setValue('O');
-					return;
+					return true;
 				}
 			}
 		}
@@ -392,7 +410,7 @@ var getComputerMove = function() {
 			for (var j=0; j < grid._rows[i]._squares.length; j++) {
 				if (grid._rows[i]._squares[j].getValue() === '') {
 					grid._rows[i]._squares[j].setValue('O');		
-					return;
+					return true;
 				}
 			}
 		}
@@ -407,10 +425,10 @@ var getComputerMove = function() {
 		var ran = (Math.random() * 4);
 		ran = Math.floor(ran);
 		switch (ran) {
-			case 1: grid._sqTopLeft.setValue('O'); return;
-			case 2: grid._sqTopRight.setValue('O'); return;
-			case 3: grid._sqBottomRight.setValue('O'); return;
-			case 4: grid._sqBottomLeft.setValue('O'); return;
+			case 1: grid._sqTopLeft.setValue('O'); return true;
+			case 2: grid._sqTopRight.setValue('O'); return true;
+			case 3: grid._sqBottomRight.setValue('O'); return true;
+			case 4: grid._sqBottomLeft.setValue('O'); return true;
 		}
 	}
 	//if three corners filled then fill center
@@ -420,84 +438,84 @@ var getComputerMove = function() {
 	if (bl !== '') { filled++; }
 	if (br !== '') { filled++; }
 	if (filled === 3) {
-		if (grid._sqCenter.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return true; }
 	}
 	//search for 'X' in corners, if found then fill next adjacent inside edge
 	//if none, then fill center
 	if (tl === 'X') { 
-		if (grid._sqCenter.setValue('O')) { return; }
-		if (grid._sqTopMiddle.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
-		if (grid._sqBottomMiddle.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return true; }
+		if (grid._sqTopMiddle.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
+		if (grid._sqBottomMiddle.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
 	}
 	if (tr === 'X') {
-		if (grid._sqCenter.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
-		if (grid._sqBottomMiddle.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
-		if (grid._sqTopMiddle.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
+		if (grid._sqBottomMiddle.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
+		if (grid._sqTopMiddle.setValue('O')) { return true; }
 	}
 	if (br === 'X') { 
-		if (grid._sqCenter.setValue('O')) { return; }
-		if (grid._sqBottomMiddle.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
-		if (grid._sqTopMiddle.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return true; }
+		if (grid._sqBottomMiddle.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
+		if (grid._sqTopMiddle.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
 	}
 	if (bl === 'X') { 
-		if (grid._sqCenter.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
-		if (grid._sqTopMiddle.setValue('O')) { return; }
-		if (grid._sqMiddleRight.setValue('O')) { return; }
-		if (grid._sqBottomMiddle.setValue('O')) { return; }
+		if (grid._sqCenter.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
+		if (grid._sqTopMiddle.setValue('O')) { return true; }
+		if (grid._sqMiddleRight.setValue('O')) { return true; }
+		if (grid._sqBottomMiddle.setValue('O')) { return true; }
 	}
 	//search for 'O', if found then try for diagonal
 	if (tl === 'O') { 
-		if (grid._sqBottomRight.setValue('O')) { return; }
+		if (grid._sqBottomRight.setValue('O')) { return true; }
 	}
 	if (tr === 'O') { 
-		if (grid._sqBottomLeft.setValue('O')) { return; }
+		if (grid._sqBottomLeft.setValue('O')) { return true; }
 	}
 	if (br === 'O') { 
-		if (grid._sqTopLeft.setValue('O')) { return; }
+		if (grid._sqTopLeft.setValue('O')) { return true; }
 	}
 	if (bl === 'O') { 
-		if (grid._sqTopRight.setValue('O')) { return; }
+		if (grid._sqTopRight.setValue('O')) { return true; }
 	}
 	//then try for next available open clockwise
 	if (tl === 'O') { 
-		if (grid._sqTopRight.setValue('O')) { return; }
+		if (grid._sqTopRight.setValue('O')) { return true; }
 	}
 	if (tr === 'O') { 
-		if (grid._sqBottomRight.setValue('O')) { return; }
+		if (grid._sqBottomRight.setValue('O')) { return true; }
 	}
 	if (br === 'O') { 
-		if (grid._sqBottomLeft.setValue('O')) { return; }
+		if (grid._sqBottomLeft.setValue('O')) { return true; }
 	}
 	if (bl === 'O') { 
-		if (grid._sqTopLeft.setValue('O')) { return; }
+		if (grid._sqTopLeft.setValue('O')) { return true; }
 	}
 	//fill any open corner
 	if (tl === '') { 
-		if (grid._sqTopLeft.setValue('O')) { return; }
+		if (grid._sqTopLeft.setValue('O')) { return true; }
 	}
 	if (tr === '') { 
-		if (grid._sqTopRight.setValue('O')) { return; }
+		if (grid._sqTopRight.setValue('O')) { return true; }
 	}
 	if (br === '') { 
-		if (grid._sqBottomRight.setValue('O')) { return; }
+		if (grid._sqBottomRight.setValue('O')) { return true; }
 	}
 	if (bl === '') { 
-		if (grid._sqBottomLeft.setValue('O')) { return; }
+		if (grid._sqBottomLeft.setValue('O')) { return true; }
 	}
 	//if no corners open then fill center
-	if (grid._sqCenter.setValue('O')) { return; }
+	if (grid._sqCenter.setValue('O')) { return true; }
 	//if no center then fill edge squares
-	if (grid._sqMiddleLeft.setValue('O')) { return; }
-	if (grid._sqBottomMiddle.setValue('O')) { return; }
-	if (grid._sqTopMiddle.setValue('O')) { return; }
-	if (grid._sqMiddleRight.setValue('O')) { return; }
+	if (grid._sqMiddleLeft.setValue('O')) { return true; }
+	if (grid._sqBottomMiddle.setValue('O')) { return true; }
+	if (grid._sqTopMiddle.setValue('O')) { return true; }
+	if (grid._sqMiddleRight.setValue('O')) { return true; }
 };
 
 var updateLeaderBoard = function(winner) {
@@ -536,8 +554,8 @@ var updateLeaderBoard = function(winner) {
 		newListItem.setAttribute('id', 'leader');
 		leaderList.appendChild(newListItem);
 	}
-	var leaders = document.querySelectorAll('#leader');
 	//update html list objects
+	var leaders = document.querySelectorAll('#leader');
 	for (i=0; i < leaders.length; i++) {
 		for (j=0; j < leaderBoard.length; j++) {
 			if (leaderBoard[j].rank === (i+1)) {
@@ -564,7 +582,7 @@ var setComputerPlay = function() {
 
 window.addEventListener('load', setHeights);
 
-document.querySelector('.grid').addEventListener('click', processTurn);
+vGrid.addEventListener('click', processTurn);
 
 startButton.addEventListener('click', newGame);
 
@@ -574,6 +592,8 @@ computerChecked.addEventListener('click', setComputerPlay);
 //INITIALIZATION ===================================================================
 
 computerChecked.checked = false;
+
+
 
 
 
