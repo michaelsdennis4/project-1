@@ -12,6 +12,8 @@ var playerO = '';
 var intervalID;
 var timer;
 var computerPlay = false;
+var computerMove = false;
+var computerDelay = 2000;
 var leaderBoard = [];
 
 //query selectors
@@ -292,11 +294,13 @@ var newGame = function() {
 var takeTurn = function() {
 	messageO.textContent = '';
 	messageX.textContent = '';
-	// //if computer is playing
+	computerMove = false;
+	// //if computer opponent is active
 	if ((computerPlay) && (turn === 'O')) {
+		computerMove = true;
 		messageO.textContent = 'HAL is playing';
 		getComputerMove();
-		window.setTimeout(updateGrid, 1000); //set small delay
+		window.setTimeout(updateGrid, computerDelay); //set small delay
 	} else {
 		timer = 10;
 		intervalID = window.setInterval(decreaseTimer, 1000);
@@ -346,6 +350,7 @@ var decreaseTimer = function () {
 
 var processTurn = function(e) {
 	if (!grid) { return false; } //no active game
+	if (computerMove) { return false; } //computer's turn in progress
 	if (winner.length > 0) { return false; } //game already won
 	var pos = e.target.id; //id for square clicked on
 	if (grid.setValue(pos, turn)) {
