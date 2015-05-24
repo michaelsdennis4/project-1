@@ -1,9 +1,15 @@
 body {
 	background-color: white;
-	font-family: 'Rubik Mono One', sans-serif;
+	font-family: 'Rubik One', sans-serif;
 }
 
 header {
+	/*font-family: 'Freckle Face', sans-serif;*/
+	font-size: 40px;
+	text-align: center;
+	line-height: 60px;
+	color: white;
+	margin: 0;
 	width: 100%;
 	height: 60px;
 	background-color: rgba(50, 50, 50, 0.8);
@@ -14,28 +20,17 @@ header {
 	position: fixed;
 }
 
-.headline {
-	text-align: center;
-	line-height: 60px;
-	color: white;
-	margin: 0;
-	border: 0;
-	font-family: 'Freckle Face', sans-serif;
-}
-
 h2 {
 	margin-top: 10px;
+	font-size: 24px;
 }
 
 p {
 	text-align: center;
+	font-size: 16px;
 	line-height: 10px;
 	font-weight: 500;
 	color: green;
-}
-
-hr {
-	border: solid black 1px;
 }
 
 #left-column {
@@ -165,14 +160,14 @@ hr {
 }
 
 .start-new {
-	width: 40%;
+	width: 25%;
 	height: 30px;
-	font-weight: 700;
 	font-size: 18px;
 	color: white;
 	float: left;
 	clear: both;
 	background-color: green;
+	border-radius: 5px;
 	margin-right: 20px;
 	margin-bottom: 20px;
 	cursor: pointer;
@@ -186,22 +181,20 @@ hr {
 
 .caption {
 	text-align: left;
-	width: 23%;
+	color: black;
 	clear: both;
 	float: left;
 	height: 50px;
-	font-weight: 500;
-	font-size: 25px;
+	font-weight: 300;
+	font-size: 20px;
 	margin: 10px 10px 0 0;	
 }
 
 #caption-X {
-	color: white;
 	
 }
 
 #caption-O {
-	color: white;
 
 }
 
@@ -209,18 +202,20 @@ hr {
 	width: 100%;
 	height: 100px;
 	border: none;
+	border-radius: 10px;
 	padding: 10px;
 	margin-bottom: 10px;
-	background-color: rgba(50, 50, 50, 0.6);
+	background-color: rgba(50, 50, 50, 0.5);
 }
 
 .name {
 	width: 40%;
 	height: 25px;
 	font-size: 14px;
-	font-weight: 700;
+	font-weight: 300;
 	float: left;
 	border: none;
+	border-radius: 5px;
 	margin: 10px 20px 0 20px;
 }
 
@@ -256,9 +251,10 @@ span {
 	line-height: 30px;
 	margin: 10px 0 10px 0;
 	color: white;
-	background-color: rgba(50, 50, 50, 0.6);
+	background-color: rgba(50, 50, 50, 0.5);
 	padding: 0 5px 0 5px;
 	border: none;
+	border-radius: 5px;
 }
 
 #message-X {
@@ -285,6 +281,7 @@ span {
 	width: 100%;
 	height: 220px;
 	border: none;
+	border-radius: 10px;
 	padding: 10px;
 	margin: 0;
 	background-color: rgba(50, 50, 50, 0.6);
@@ -296,7 +293,7 @@ span {
 	font-size: 18px;
 	font-weight: 500;
 	text-align: center;
-	color: white;
+	color: black;
 	margin-top: 0;
 	margin-bottom: 5px;
 }
@@ -308,6 +305,7 @@ span {
 	margin-left: auto;
 	margin-right: auto;
 	border: none;
+	border-radius: 10px;
 	background-color: white;
 	list-style-type: decimal;
 	overflow: scroll;
