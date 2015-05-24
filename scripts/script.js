@@ -597,6 +597,12 @@ computerChecked.addEventListener('click', setComputerPlay);
 //INITIALIZATION ===================================================================
 
 computerChecked.checked = false;
+messageX.textContent = '';
+messageO.textContent = '';
+inputX.value = '';
+inputO.value = '';
+
+
 
 
 
