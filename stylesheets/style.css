@@ -12,7 +12,7 @@ header {
 	margin: 0;
 	width: 100%;
 	height: 60px;
-	background-color: rgba(50, 50, 50, 0.5);
+	background-color: rgba(50, 50, 50, 0.4);
 	top: 0;
 	left: 0;
 	border: 0;
@@ -304,13 +304,14 @@ span {
 }
 
 .leader-board {
-	width: 80%;
+	width: 95%;
 	height: 200px;
 	margin-top: 5px;
 	margin-left: auto;
 	margin-right: auto;
 	border: none;
 	border-radius: 10px;
+	padding: 5px;
 	background-color: white;
 	list-style-type: decimal;
 	overflow: scroll;
