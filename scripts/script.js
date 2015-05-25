@@ -298,7 +298,7 @@ var takeTurn = function() {
 	// //if computer opponent is active
 	if ((computerPlay) && (turn === 'O')) {
 		computerMove = true;
-		messageO.textContent = 'HAL is playing';
+		messageO.textContent = 'COMPUTER is playing';
 		getComputerMove();
 		window.setTimeout(updateGrid, computerDelay); //set small delay
 	} else {
@@ -573,7 +573,7 @@ var updateLeaderBoard = function(winner) {
 var setComputerPlay = function() {
 	if (computerChecked.checked === true) {
 		computerPlay = true;
-		inputO.value = 'HAL';
+		inputO.value = 'COMPUTER';
 		inputO.readOnly = true;
 	} else {
 		computerPlay = false;
